@@ -30,23 +30,30 @@ Here are the download links for each model checkpoint:
 # Speech guided-diffusion run
 
 ## classifier train
+'''
 TRAIN_FLAGS="--iterations 150000 --image_size 80 --anneal_lr True --batch_size 32 --lr 3e-3 --save_interval 5000 --weight_decay 0.01 --data_dir /data/yjpak/Dataset/audio_mnist/ --doc model_analysis"
 CLASSIFIER_FLAGS="--image_size 80"
 mpiexec -n 2 python classifier_train.py $TRAIN_FLAGS $CLASSIFIER_FLAGS
+'''
 
 ## classifier train CNN
+'''
 TRAIN_FLAGS="--iterations 150000 --image_size 80 --anneal_lr True --batch_size 32 --lr 3e-3 --save_interval 5000 --weight_decay 0.01 --data_dir /data/yjpak/Dataset/audio_mnist/ --doc CNN_classifier02"
 CLASSIFIER_FLAGS="--image_size 80"
 mpiexec -n 2 python model_analysis.py $TRAIN_FLAGS $CLASSIFIER_FLAGS
+'''
 
 ## diffusion train
+'''
 MODEL_FLAGS="--image_size 80 --class_cond True --learn_sigma False --weight_decay 0.05 --num_head_channels 64 --data_dir /data/yjpak/Dataset/audio_mnist/ --save_interval 5000" 
 DIFFUSION_FLAGS="--diffusion_steps 1000 --noise_schedule cosine"
 TRAIN_FLAGS="--lr 3e-4 --batch_size 64 --doc diffusion01"
 mpiexec -n 2 python image_train.py $MODEL_FLAGS $DIFFUSION_FLAGS $TRAIN_FLAGS
+'''
 
 
-## CNN_classifier smaple 
+## classifier smaple 
+'''
 MODEL_FLAGS="--image_size 80 --class_cond True --learn_sigma False --num_head_channels 64" 
 CLASSIFIER_FLAGS="--image_size 80"
 SAMPLE_FLAGS="--batch_size 4 --num_samples 50 --timestep_respacing 1000 --use_ddim False --doc sample/CNN/"
@@ -55,6 +62,7 @@ mpiexec -n 2 python CNN_sample.py \
     --model_path /data/yjpak/guided-diffusion/logs/diffusion01/model045000.pt\
     --classifier_path /data/yjpak/guided-diffusion/logs/classifier/CNN_classifier02/classifier_model065000.pt\
     $MODEL_FLAGS $CLASSIFIER_FLAGS $SAMPLE_FLAGS $DIFFUSION_FLAGS
+'''
 
 # Sampling from pre-trained models
 
