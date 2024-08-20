@@ -68,17 +68,6 @@ mpiexec -n 2 python CNN_sample.py \
     $MODEL_FLAGS $CLASSIFIER_FLAGS $SAMPLE_FLAGS $DIFFUSION_FLAGS
 ```
 
-# Sampling from pre-trained models
-
-To sample from these models, you can use the `classifier_sample.py`, `image_sample.py`, and `super_res_sample.py` scripts.
-Here, we provide flags for sampling from all of these models.
-We assume that you have downloaded the relevant model checkpoints into a folder called `models/`.
-
-For these examples, we will generate 100 samples with batch size 4. Feel free to change these values.
-
-```
-SAMPLE_FLAGS="--batch_size 4 --num_samples 100 --timestep_respacing 250"
-```
 
 ## Classifier guidance
 
@@ -137,54 +126,6 @@ python super_res_sample.py $MODEL_FLAGS --model_path models/64_256_upsampler.pt 
 MODEL_FLAGS="--attention_resolutions 32,16 --class_cond True --diffusion_steps 1000 --large_size 512 --small_size 128 --learn_sigma True --noise_schedule linear --num_channels 192 --num_head_channels 64 --num_res_blocks 2 --resblock_updown True --use_fp16 True --use_scale_shift_norm True"
 python super_res_sample.py $MODEL_FLAGS --model_path models/128_512_upsampler.pt $SAMPLE_FLAGS --base_samples 128_samples.npz
 ```
-
-## LSUN models
-
-These models are class-unconditional and correspond to a single LSUN class. Here, we show how to sample from `lsun_bedroom.pt`, but the other two LSUN checkpoints should work as well:
-
-```
-MODEL_FLAGS="--attention_resolutions 32,16,8 --class_cond False --diffusion_steps 1000 --dropout 0.1 --image_size 256 --learn_sigma True --noise_schedule linear --num_channels 256 --num_head_channels 64 --num_res_blocks 2 --resblock_updown True --use_fp16 True --use_scale_shift_norm True"
-python image_sample.py $MODEL_FLAGS --model_path models/lsun_bedroom.pt $SAMPLE_FLAGS
-```
-
-You can sample from `lsun_horse_nodropout.pt` by changing the dropout flag:
-
-```
-MODEL_FLAGS="--attention_resolutions 32,16,8 --class_cond False --diffusion_steps 1000 --dropout 0.0 --image_size 256 --learn_sigma True --noise_schedule linear --num_channels 256 --num_head_channels 64 --num_res_blocks 2 --resblock_updown True --use_fp16 True --use_scale_shift_norm True"
-python image_sample.py $MODEL_FLAGS --model_path models/lsun_horse_nodropout.pt $SAMPLE_FLAGS
-```
-
-Note that for these models, the best samples result from using 1000 timesteps:
-
-```
-SAMPLE_FLAGS="--batch_size 4 --num_samples 100 --timestep_respacing 1000"
-```
-
-# Results
-
-This table summarizes our ImageNet results for pure guided diffusion models:
-
-| Dataset          | FID  | Precision | Recall |
-|------------------|------|-----------|--------|
-| ImageNet 64x64   | 2.07 | 0.74      | 0.63   |
-| ImageNet 128x128 | 2.97 | 0.78      | 0.59   |
-| ImageNet 256x256 | 4.59 | 0.82      | 0.52   |
-| ImageNet 512x512 | 7.72 | 0.87      | 0.42   |
-
-This table shows the best results for high resolutions when using upsampling and guidance together:
-
-| Dataset          | FID  | Precision | Recall |
-|------------------|------|-----------|--------|
-| ImageNet 256x256 | 3.94 | 0.83      | 0.53   |
-| ImageNet 512x512 | 3.85 | 0.84      | 0.53   |
-
-Finally, here are the unguided results on individual LSUN classes:
-
-| Dataset      | FID  | Precision | Recall |
-|--------------|------|-----------|--------|
-| LSUN Bedroom | 1.90 | 0.66      | 0.51   |
-| LSUN Cat     | 5.57 | 0.63      | 0.52   |
-| LSUN Horse   | 2.57 | 0.71      | 0.55   |
 
 # Training models
 
